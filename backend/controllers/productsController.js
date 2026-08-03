@@ -3,29 +3,29 @@ const Product = require("../models/Product");
 // GET /api/products
 const getAllProducts = async (req, res) => {
   try {
-    let { page = 1, limit = 10, sort, category } = req.query;
+    let { page = 1, limit = 10, sort, query } = req.query;
 
     page = parseInt(page);
     limit = parseInt(limit);
 
     const filter = {};
 
-    if (category) {
-      filter.category = category;
+    if (query) {
+      filter.category = query;
     }
 
-    let query = Product.find(filter);
+    let productsQuery = Product.find(filter);
 
     if (sort === "asc") {
-      query = query.sort({ price: 1 });
+      productsQuery = productsQuery.sort({ price: 1 });
     } else if (sort === "desc") {
-      query = query.sort({ price: -1 });
+      productsQuery = productsQuery.sort({ price: -1 });
     }
 
     const totalProducts = await Product.countDocuments(filter);
     const totalPages = Math.ceil(totalProducts / limit);
 
-    const products = await query
+    const products = await productsQuery
       .skip((page - 1) * limit)
       .limit(limit);
 

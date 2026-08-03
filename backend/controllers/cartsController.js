@@ -95,9 +95,126 @@ const addProductToCart = async (req, res) => {
     });
   }
 };
+// Eliminar un producto del carrito
+const removeProductFromCart = async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
 
+    const cart = await Cart.findById(cid);
+
+    if (!cart) {
+      return res.status(404).json({
+        status: "error",
+        message: "Carrito no encontrado"
+      });
+    }
+
+    cart.products = cart.products.filter(
+      item => item.product.toString() !== pid
+    );
+
+    await cart.save();
+
+    res.json({
+      status: "success",
+      message: "Producto eliminado del carrito",
+      cart
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
+  }
+};
+
+// Actualizar carrito completo
+const updateCart = async (req, res) => {
+  try {
+    const cart = await Cart.findByIdAndUpdate(
+      req.params.cid,
+      { products: req.body.products },
+      { new: true }
+    );
+
+    res.json({
+      status: "success",
+      cart
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
+  }
+};
+
+// Actualizar cantidad de un producto
+const updateProductQuantity = async (req, res) => {
+  try {
+    const { cid, pid } = req.params;
+    const { quantity } = req.body;
+
+    const cart = await Cart.findById(cid);
+
+    const item = cart.products.find(
+      p => p.product.toString() === pid
+    );
+
+    if (!item) {
+      return res.status(404).json({
+        status: "error",
+        message: "Producto no encontrado en el carrito"
+      });
+    }
+
+    item.quantity = quantity;
+
+    await cart.save();
+
+    res.json({
+      status: "success",
+      cart
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
+  }
+};
+
+// Vaciar carrito
+const clearCart = async (req, res) => {
+  try {
+    const cart = await Cart.findById(req.params.cid);
+
+    cart.products = [];
+
+    await cart.save();
+
+    res.json({
+      status: "success",
+      message: "Carrito vaciado",
+      cart
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      status: "error",
+      message: error.message
+    });
+  }
+};
 module.exports = {
   createCart,
   getCartById,
-  addProductToCart
+  addProductToCart,
+  removeProductFromCart,
+  updateCart,
+  updateProductQuantity,
+  clearCart
 };

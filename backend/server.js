@@ -11,7 +11,7 @@ const { Server } = require("socket.io");
 const connectDB = require("./config/db");
 const productsRoutes = require("./routes/productsRoutes");
 const cartsRoutes = require("./routes/cartsRoutes");
-
+const viewsRoutes = require("./routes/viewsRoutes");
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
@@ -42,6 +42,7 @@ app.get("/", (req, res) => {
 // API
 app.use("/api/products", productsRoutes);
 app.use("/api/carts", cartsRoutes);
+app.use("/", viewsRoutes);
 
 // Iniciar servidor
 server.listen(PORT, () => {

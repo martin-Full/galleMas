@@ -48,11 +48,12 @@ router.get("/carts/:cid", async (req, res) => {
     if (!cart) {
       return res.status(404).send("Carrito no encontrado");
     }
+console.log(cart);
 
-    res.render("cart", {
-      title: "Carrito",
-      cart
-    });
+res.render("cart", {
+  title: "Carrito",
+  cart
+});
 
   } catch (error) {
     res.status(500).send(error.message);

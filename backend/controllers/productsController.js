@@ -79,7 +79,10 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const product = await Product.create(req.body);
+    const io = req.app.get("io");
+    const products = await Product.find();
 
+io.emit("productsUpdated", products);
     res.status(201).json({
       status: "success",
       payload: product
@@ -101,6 +104,9 @@ const updateProduct = async (req, res) => {
       req.body,
       { new: true }
     );
+    const io = req.app.get("io");
+    const products = await Product.find();
+      io.emit("productsUpdated", products);
 
     if (!product) {
       return res.status(404).json({
@@ -123,6 +129,7 @@ const updateProduct = async (req, res) => {
 };
 
 // DELETE /api/products/:pid
+// DELETE /api/products/:pid
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findByIdAndDelete(req.params.pid);
@@ -133,6 +140,11 @@ const deleteProduct = async (req, res) => {
         message: "Producto no encontrado"
       });
     }
+
+    const io = req.app.get("io");
+    const products = await Product.find();
+
+    io.emit("productsUpdated", products);
 
     res.json({
       status: "success",

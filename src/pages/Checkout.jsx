@@ -308,59 +308,36 @@ function Checkout() {
             </h2>
 
             <div className="mt-6 space-y-4">
-              {cart.map((item) => (
-                <div
-                  key={item.id}
-                  className="flex gap-3 border-b border-[#4A2105]/10 pb-4"
-                >
-                  <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F3E6D6]/60">
-                    <img
-                      src={item.image}
-                      alt={item.name}
-                      className="h-full w-full object-contain p-1"
-                    />
-                  </div>
+  {cart.map((item) => (
+    <div
+      key={item._id}
+      className="flex gap-3 border-b border-[#4A2105]/10 pb-4"
+    >
+      <div className="h-16 w-16 shrink-0 overflow-hidden rounded-xl bg-[#F3E6D6]/60">
+        <img
+          src={item.thumbnails?.[0]}
+          alt={item.title}
+          className="h-full w-full object-contain p-1"
+        />
+      </div>
 
-                  <div className="min-w-0 flex-1">
-                    <p className="font-bold text-[#4A2105]">
-                      {item.name}
-                    </p>
+      <div className="min-w-0 flex-1">
+        <p className="font-bold text-[#4A2105]">
+          {item.title}
+        </p>
 
-                    <p className="text-sm text-[#2D211B]/55">
-                      Cantidad: {item.quantity}
-                    </p>
-                  </div>
+        <p className="text-sm text-[#2D211B]/55">
+          Cantidad: {item.quantity}
+        </p>
+      </div>
 
-                  <p className="font-bold text-[#C5573F]">
-                    $
-                    {(item.price * item.quantity).toLocaleString(
-                      'es-AR',
-                    )}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-6 flex items-center justify-between">
-              <span className="text-[#2D211B]/60">
-                Subtotal
-              </span>
-
-              <span className="text-2xl font-black text-[#4A2105]">
-                ${cartTotal.toLocaleString('es-AR')}
-              </span>
-            </div>
-
-            <div className="mt-4 rounded-2xl bg-[#FBF6EF] p-4">
-              <p className="text-sm font-semibold text-[#4A2105]">
-                Costo de envío pendiente
-              </p>
-
-              <p className="mt-1 text-xs leading-5 text-[#2D211B]/60">
-                El costo y disponibilidad de la entrega se confirmarán según
-                la dirección ingresada.
-              </p>
-            </div>
+      <p className="font-bold text-[#C5573F]">
+        $
+        {(item.price * item.quantity).toLocaleString("es-AR")}
+      </p>
+    </div>
+  ))}
+</div>
           </aside>
         </div>
       </div>

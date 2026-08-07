@@ -78,20 +78,29 @@ const getProductById = async (req, res) => {
 // POST /api/products
 const createProduct = async (req, res) => {
   try {
+    console.log("📥 Llegó un POST para crear producto");
+    console.log(req.body);
+
     const product = await Product.create(req.body);
+
     const io = req.app.get("io");
     const products = await Product.find();
 
-io.emit("productsUpdated", products);
+    console.log("📡 Enviando evento productsUpdated");
+    console.log(`Cantidad de productos: ${products.length}`);
+
+    io.emit("productsUpdated", products);
+
     res.status(201).json({
       status: "success",
-      payload: product
-    });
-
+      payload: product,
+      });
   } catch (error) {
+    console.error(error);
+
     res.status(500).json({
       status: "error",
-      message: error.message
+            message: error.message,
     });
   }
 };
